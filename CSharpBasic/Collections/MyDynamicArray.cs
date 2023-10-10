@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Collections
 {
 	//T의 자료형이 IComparable로 변환을 할 수 있어야된다.
-	internal class MyDynamicArray<T> where T : IComparable<T>
+	internal class MyDynamicArray<T> : IEnumerable<T> where T : IComparable<T>
 	{
-		public T this[uint index]
+	
+
+
+		public T this[int index]
 		{
 			get
 			{
@@ -100,5 +105,53 @@ namespace Collections
 			return true;
 		}
 
+		public IEnumerator<T> GetEnumerator()
+		{
+			return new Enumerator(this);
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return new Enumerator(this);
+		}
+
+
+		public struct Enumerator : IEnumerator<T>
+		{
+			public T Current => _data[_index];
+
+			object IEnumerator.Current => _data[_index];
+
+			private MyDynamicArray<T> _data;
+			private int _index;
+
+			public Enumerator(MyDynamicArray<T> data)
+			{
+				_data = data;
+				_index = -1;//책 표지를 덮은 상태로 준다.
+			}
+
+			public void Dispose()
+			{
+				Console.WriteLine("Dispose");
+			}
+
+			public bool MoveNext()
+			{
+				//넘길 수 있는 다음장이 존재하는 경우 다음장으로 넘겨라
+				if(_index < _data.Count -1)
+				{
+					_index++;
+					return true;
+				}
+				//없으면 false
+				return false;
+			}
+
+			public void Reset()
+			{
+				_index = -1;
+			}
+		}
 	}
 }
