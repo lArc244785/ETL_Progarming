@@ -1,4 +1,6 @@
-﻿namespace Collections
+﻿using System.Collections;
+
+namespace Collections
 {
 	public struct KeyValuePair<T, K> : IEquatable<KeyValuePair<T, K>>
 		where T : IEquatable<T>
@@ -18,7 +20,7 @@
 		}
 	}
 
-	internal class MyHashTable<TKey, TValue>
+	internal class MyHashTable<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
 		where TKey : IEquatable<TKey>
 		where TValue : IEquatable<TValue>
 	{
@@ -94,7 +96,6 @@
 		private List<KeyValuePair<TKey, TValue>>[] _bukets =
 			new List<KeyValuePair<TKey, TValue>>[DEFAULT_SIZE];
 
-
 		//유효한 인덱스들을 저장하는곳
 		private List<int> _valideIndexList = new();
 
@@ -118,6 +119,7 @@
 			if (bucket == null)
 			{
 				_bukets[index] = new();
+				_bukets[index].Add(new(key, value));
 				_valideIndexList.Add(index);
 			}
 			else
@@ -126,8 +128,8 @@
 				{
 					if (bucket[i].Key.Equals(key))
 						throw new Exception($"[MyHashtable<{nameof(TKey)} , {nameof(TValue)}>] : Key{key} doesn't exist");
+					bucket.Add(new(key, value));
 				}
-				bucket.Add(new(key, value));
 			}
 		}
 		public bool TryAdd(TKey key, TValue value)
@@ -138,6 +140,7 @@
 			if (bucket == null)
 			{
 				_bukets[index] = new();
+				_bukets[index].Add(new(key, value));
 				_valideIndexList.Add(index);
 			}
 			else
@@ -191,6 +194,75 @@
 				}
 			}
 			return false;
+		}
+
+		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+		{
+			return new Enumerator(this);
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return new Enumerator(this);
+		}
+
+		struct Enumerator : IEnumerator<KeyValuePair<TKey,TValue>>
+		{
+			private MyHashTable <TKey, TValue>? _hashTable;
+
+			private List<KeyValuePair<TKey, TValue>>? _buket;
+			private int _valideIndexListIndex;
+			private int _buketIndex;
+
+			public Enumerator(MyHashTable<TKey, TValue>? hashTable)
+			{
+				_hashTable = hashTable;
+
+				_buket = null;
+				_valideIndexListIndex = -1;
+				_buketIndex = 0;
+			}
+
+			public KeyValuePair<TKey, TValue> Current => _buket != null ? _buket[_buketIndex] : default;
+
+			object IEnumerator.Current => _buket != null ? _buket[_buketIndex] : default;
+
+			public void Dispose()
+			{
+				
+			}
+
+			public bool MoveNext()
+			{
+				if (_valideIndexListIndex == -1)
+				{
+					_valideIndexListIndex++;
+					_buket = _hashTable._bukets[_hashTable._valideIndexList[_valideIndexListIndex]];
+					return true;
+				}
+				else
+				{
+					_buketIndex++;
+					if(_buketIndex == _buket.Count)
+					{
+						_buketIndex = 0;
+						_valideIndexListIndex++;
+						
+						if (_valideIndexListIndex == _hashTable._valideIndexList.Count)
+							return false;
+						_buket = _hashTable._bukets[_hashTable._valideIndexList[_valideIndexListIndex]];
+					}	
+				}
+
+				return true;
+			}
+
+			public void Reset()
+			{
+				_buket = null;
+				_valideIndexListIndex = -1;
+				_buketIndex = 0;
+			}
 		}
 
 	}
