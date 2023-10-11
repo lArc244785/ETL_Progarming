@@ -132,18 +132,28 @@ namespace Collections
 
 		public void Remove(Node<T> node)
 		{
-			Node<T> prevNode = node.prev;
-			Node<T> nextNode = node.next;
+			Node<T> leftNode = node.prev;
+			Node<T> rightNode = node.next;
 
-			if (prevNode != null)
-				prevNode.next = nextNode;
+			if (leftNode != null)
+			{
+				leftNode.next = rightNode;
+			}
 			else
-				_first = nextNode;
+			{
+				rightNode.prev = null;
+				_first = rightNode;
+			}
 
-			if (nextNode != null)
-				nextNode.prev = prevNode;
+			if(rightNode != null)
+			{
+				rightNode.prev = leftNode;
+			}
 			else
-				_last = prevNode;
+			{
+				leftNode.next = null;
+				_last = leftNode;
+			}
 
 		}
 	}
