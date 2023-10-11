@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Collections
 {
-	public class Node <T>
+	public class MyLinkedListNode <T>
 	{
 		public T? value;
-		public Node<T>? prev = null;
-		public Node<T>? next = null;
-		public Node(T value)
+		public MyLinkedListNode<T>? prev = null;
+		public MyLinkedListNode<T>? next = null;
+		public MyLinkedListNode(T value)
 		{
 			this.value = value;
 		}
@@ -26,8 +26,8 @@ namespace Collections
 		public struct Enumerator : IEnumerator<T>
 		{
 			private MyLinkedList<T> _linkedList;
-			private Node<T>? _node;
-			private Node<T>? _error;
+			private MyLinkedListNode<T>? _node;
+			private MyLinkedListNode<T>? _error;
 
 			public T Current => _node.value;
 
@@ -35,7 +35,7 @@ namespace Collections
 
 			public Enumerator(MyLinkedList<T> linkedList)
 			{
-				_error = new Node<T>(default);
+				_error = new MyLinkedListNode<T>(default);
 				_linkedList = linkedList;
 				_node = _error;
 			}
@@ -63,13 +63,13 @@ namespace Collections
 			}
 		}
 
-		private Node<T> _first;
-		private Node<T> _last;
-		private Node<T> _tmp;
+		private MyLinkedListNode<T> _first;
+		private MyLinkedListNode<T> _last;
+		private MyLinkedListNode<T> _tmp;
 		private int _count;
 
-		public Node<T> First => _first;
-		public Node<T> Last => _last;
+		public MyLinkedListNode<T> First => _first;
+		public MyLinkedListNode<T> Last => _last;
 		public int Count => _count;
 
 		#region Add
@@ -77,7 +77,7 @@ namespace Collections
 		{
 			if(_first == null || _last == null)
 			{
-				_tmp = new Node<T>(value);
+				_tmp = new MyLinkedListNode<T>(value);
 				_first = _tmp;
 				_last = _tmp;
 				_count++;
@@ -90,7 +90,7 @@ namespace Collections
 			if (InitNode(value))
 				return;
 
-			_tmp = new Node<T>(value);
+			_tmp = new MyLinkedListNode<T>(value);
 
 			_first.prev = _tmp;
 			_tmp.next = _first;
@@ -104,7 +104,7 @@ namespace Collections
 			if (InitNode(value))
 				return;
 
-			_tmp = new Node<T>(value);
+			_tmp = new MyLinkedListNode<T>(value);
 
 			_last.next = _tmp;
 			_tmp.prev = _last;
@@ -113,7 +113,7 @@ namespace Collections
 			_count++;
 		}
 
-		public void AddFront(Node<T> target,T value)
+		public void AddFront(MyLinkedListNode<T> target,T value)
 		{
 			if (InitNode(value))
 				return;
@@ -124,9 +124,9 @@ namespace Collections
 				return;
 			}
 
-			_tmp = new Node<T>(value);
+			_tmp = new MyLinkedListNode<T>(value);
 
-			Node<T> targetPrev = target.prev;
+			MyLinkedListNode<T> targetPrev = target.prev;
 			targetPrev.next = _tmp;
 			_tmp.prev = targetPrev;
 			_tmp.next = target;
@@ -135,7 +135,7 @@ namespace Collections
 			_count++;
 		}
 
-		public void AddBack(Node<T> target, T value)
+		public void AddBack(MyLinkedListNode<T> target, T value)
 		{
 			if (InitNode(value))
 				return;
@@ -146,8 +146,8 @@ namespace Collections
 				return;
 			}
 
-			_tmp = new Node<T>(value);
-			Node<T> targetNext = target.next;
+			_tmp = new MyLinkedListNode<T>(value);
+			MyLinkedListNode<T> targetNext = target.next;
 			
 			target.next = _tmp;
 			_tmp.prev = target;
@@ -159,9 +159,9 @@ namespace Collections
 		#endregion
 
 		#region Find
-		public Node<T> Find(Predicate<T> match)
+		public MyLinkedListNode<T> Find(Predicate<T> match)
 		{
-			Node<T> result = null;
+			MyLinkedListNode<T> result = null;
 			_tmp = _first;
 			while(_tmp != null && result == null)
 			{
@@ -174,9 +174,9 @@ namespace Collections
 			return result;
 		}
 
-		public Node<T> FindLast(Predicate<T> match)
+		public MyLinkedListNode<T> FindLast(Predicate<T> match)
 		{
-			Node<T> result = null;
+			MyLinkedListNode<T> result = null;
 			_tmp = _last;
 			while (_tmp != null && result == null)
 			{
@@ -190,13 +190,13 @@ namespace Collections
 		}
 		#endregion
 
-		private bool Remove(Node<T> node)
+		private bool Remove(MyLinkedListNode<T> node)
 		{
 			if (node == null)
 				return false;
 
-			Node<T> leftNode = node.prev;
-			Node<T> rightNode = node.next;
+			MyLinkedListNode<T> leftNode = node.prev;
+			MyLinkedListNode<T> rightNode = node.next;
 
 			if (leftNode != null)
 			{

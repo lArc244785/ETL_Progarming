@@ -6,7 +6,7 @@ namespace Collections
 	{
 		static void ShowLinkedList<T>(MyLinkedList<T> linkedList) where T : IComparable<T>
 		{
-			Node<T> node = linkedList.First;
+			MyLinkedListNode<T> node = linkedList.First;
 			while(node != null)
 			{
 				Console.WriteLine(node.value);
