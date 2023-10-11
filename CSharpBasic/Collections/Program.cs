@@ -4,7 +4,7 @@ namespace Collections
 {
 	internal class Program
 	{
-		static void ShowLinkedList<T>(MyLinkedList<T> linkedList)
+		static void ShowLinkedList<T>(MyLinkedList<T> linkedList) where T : IComparable<T>
 		{
 			Node<T> node = linkedList.First;
 			while(node != null)
@@ -20,24 +20,33 @@ namespace Collections
 		{
 			MyLinkedList<int> list = new MyLinkedList<int>();
 
-			Node<int> removeNode = new Node<int>(235);
+			int removeValue = 235;
 
-			list.FirstAdd(new Node<int>(1));
-			list.FrontAdd(list.First , new Node<int>(2));
-			list.LastAdd(new Node<int>(3));
-			list.BackAdd(list.Last, new Node<int>(4));
-			list.FrontAdd(list.Last, removeNode);
+			list.AddFirst(1);
+			list.AddFront(list.First , 2);
+			list.AddLast(3);
+			list.AddBack(list.Last, 4);
+			list.AddFront(list.Last, removeValue);
 
 			ShowLinkedList<int>(list);
 
-			Console.WriteLine(list.FirstFind((x) => x == 2).value);
-			Console.WriteLine(list.LastFind((x) => x > 3).value);
+			Console.WriteLine(list.Find((x) => x == 2).value);
+			Console.WriteLine(list.FindLast((x) => x > 3).value);
 
 			Console.WriteLine();
 
-			list.Remove(removeNode);
+
+			list.Remove(removeValue);
+
 
 			ShowLinkedList<int>(list);
+
+			Console.WriteLine(list.Count + "\n");
+
+			foreach(var item in list)
+			{
+				Console.WriteLine(item);
+			}
 
 		}
 	}
