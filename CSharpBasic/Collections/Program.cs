@@ -14,8 +14,11 @@ namespace Collections
 			hashTable.Add("D", 4);
 			hashTable.Add("E", 5);
 			hashTable.Add("F", 6);
+			hashTable.Remove("F");
 
-			if (!hashTable.TryAdd("F", 7))
+			hashTable.Add("F", 7);
+
+			if (!hashTable.TryAdd("F", 8))
 				Console.WriteLine("실패");
 
 			Console.WriteLine("--------------");

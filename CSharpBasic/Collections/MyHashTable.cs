@@ -119,7 +119,8 @@ namespace Collections
 			if (bucket == null)
 			{
 				_bukets[index] = new();
-				_bukets[index].Add(new(key, value));
+				bucket = _bukets[index];
+
 				_valideIndexList.Add(index);
 			}
 			else
@@ -128,9 +129,9 @@ namespace Collections
 				{
 					if (bucket[i].Key.Equals(key))
 						throw new Exception($"[MyHashtable<{nameof(TKey)} , {nameof(TValue)}>] : Key{key} doesn't exist");
-					bucket.Add(new(key, value));
 				}
 			}
+			bucket.Add(new(key, value));
 		}
 		public bool TryAdd(TKey key, TValue value)
 		{
@@ -150,9 +151,9 @@ namespace Collections
 					if (bucket[i].Key.Equals(key))
 						return false;
 				}
-				bucket.Add(new(key, value));
 			}
 
+				bucket.Add(new(key, value));
 			return true;
 		}
 		public bool TryGetValue(TKey key, out TValue value)
@@ -186,7 +187,7 @@ namespace Collections
 				{
 					if (bucket[i].Key.Equals(key))
 					{
-						bucket.Remove(bucket[i]);
+						bucket.RemoveAt(i);
 						if (bucket.Count == 0)
 							_valideIndexList.Remove(index);
 						return true;
@@ -218,9 +219,9 @@ namespace Collections
 			{
 				_hashTable = hashTable;
 
-				_buket = null;
-				_valideIndexListIndex = -1;
-				_buketIndex = 0;
+				_valideIndexListIndex = 0;
+				_buketIndex = -1;
+				_buket = _hashTable._bukets[_hashTable._valideIndexList[_valideIndexListIndex]];
 			}
 
 			public KeyValuePair<TKey, TValue> Current => _buket != null ? _buket[_buketIndex] : default;
